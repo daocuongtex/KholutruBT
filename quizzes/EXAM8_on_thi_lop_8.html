@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>EXAM.8 — Ôn thi lớp 8</title>
+<style>
+:root{color-scheme:dark;--bg:#090f1d;--card:#111c30;--panel:#17243b;--line:#2b3b57;--text:#edf3ff;--muted:#9aabc5;--accent:#7c9cff;--green:#35c98a;--red:#ff7272}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 10% 0%,#1a2a4c 0,transparent 38%),var(--bg);color:var(--text);font:16px/1.5 system-ui,Arial,sans-serif}
+main{max-width:900px;margin:auto;padding:22px 15px 50px}.hero,.card{background:rgba(17,28,48,.95);border:1px solid var(--line);border-radius:18px;padding:20px;margin-bottom:16px;box-shadow:0 12px 32px #0003}
+.hero{background:linear-gradient(130deg,#18294a,#111c30)}.eyebrow{color:#a9bcff;font-size:12px;letter-spacing:2px}.brand{font-size:30px;font-weight:850;margin:3px 0}.brand span{color:var(--accent)}.muted{color:var(--muted)}.stats,.subjects,.row{display:flex;gap:10px;flex-wrap:wrap}.stat{flex:1;min-width:100px;background:var(--panel);padding:12px;border-radius:12px}.stat b{display:block;font-size:22px}
+.subject{flex:1;min-width:135px;text-align:left;background:var(--panel);color:var(--text);border:1px solid var(--line);border-radius:12px;padding:14px;cursor:pointer}.subject.active{border-color:var(--accent);background:#24365b}.subject small{display:block;color:var(--muted);margin-top:4px}
+button,select{font:inherit}button{cursor:pointer}.primary{background:var(--accent);color:#081225;border:0;border-radius:11px;padding:11px 16px;font-weight:750}.secondary{background:transparent;color:var(--text);border:1px solid var(--line);border-radius:11px;padding:10px 14px}.full{width:100%}.bar{height:9px;background:#293750;border-radius:20px;overflow:hidden}.bar div{height:100%;background:linear-gradient(90deg,#7c9cff,#52d6b1);width:0%;transition:width .2s}
+.qtitle{font-size:18px;font-weight:700;margin:18px 0}.option{display:block;width:100%;text-align:left;background:var(--panel);border:1px solid var(--line);border-radius:11px;color:var(--text);padding:12px;margin:8px 0}.option.selected{border-color:var(--accent);background:#25375b}.option.correct{border-color:var(--green);background:#12382f}.option.wrong{border-color:var(--red);background:#421f2b}.feedback{padding:13px;border-radius:12px;background:#1c2b43;margin-top:12px}.hidden{display:none!important}select{background:var(--panel);color:var(--text);border:1px solid var(--line);border-radius:10px;padding:9px}.timer{font-size:38px;font-weight:800;text-align:center;font-variant-numeric:tabular-nums}.pill{display:inline-block;border:1px solid var(--line);border-radius:30px;padding:4px 10px;font-size:12px;color:var(--muted)}
+@media(max-width:520px){main{padding:12px}.hero,.card{padding:15px}.qtitle{font-size:16px}}
+</style></head>
+<body><main>
+<section class="hero">
+ <div class="eyebrow">STUDENT LEARNING SYSTEM</div><div class="brand">EXAM<span>.8</span></div>
+ <div class="muted">Ôn thi lớp 8 • Dark mode • Làm lại không giới hạn</div>
+ <div class="stats" style="margin-top:18px">
+  <div class="stat"><b id="answeredStat">0</b><span class="muted">Đã trả lời</span></div>
+  <div class="stat"><b id="scoreStat">—</b><span class="muted">Điểm gần nhất</span></div>
+  <div class="stat"><b id="attemptStat">0</b><span class="muted">Lượt thi</span></div>
+ </div>
+</section>
+<section class="card"><b>📚 Chọn môn học</b><div class="subjects" style="margin-top:12px">
+ <button class="subject active" data-sub="Sinh học">🧬 <b>Sinh học</b><small>Đề cương Sinh.docx</small></button>
+ <button class="subject" data-sub="Công nghệ">⚙️ <b>Công nghệ</b><small>Ghi chép trong ảnh vở</small></button>
+ </div></section>
+<section class="card">
+ <div class="row" style="justify-content:space-between;align-items:center"><b>⏱ Đồng hồ làm bài</b><span class="pill" id="timerStatus">Chưa bắt đầu</span></div>
+ <div class="timer" id="timer">30:00</div>
+ <div class="row"><select id="duration"><option value="15">15 phút</option><option value="30" selected>30 phút</option><option value="45">45 phút</option><option value="60">60 phút</option></select><button class="primary" id="timerStart">▶ Bắt đầu</button><button class="secondary" id="timerReset">↺ Đặt lại</button></div>
+</section>
+<section class="card" id="examCard">
+ <div class="row" style="justify-content:space-between;align-items:center"><b id="examHeading">🧬 Sinh học 8</b><span class="pill" id="qType">Trắc nghiệm</span></div>
+ <div class="row" style="justify-content:space-between;margin-top:16px;font-size:13px;color:var(--muted)"><span id="progressLabel">Tiến độ: 0/19</span><span id="progressPct">0%</span></div><div class="bar"><div id="progress"></div></div>
+ <div class="qtitle" id="question">Đang tải câu hỏi...</div><div id="options"></div><div class="feedback hidden" id="feedback"></div>
+ <div class="row" style="margin-top:16px"><button class="secondary" id="prev">← Trước</button><button class="primary" id="next">Tiếp →</button></div>
+ <button class="primary full" style="margin-top:12px" id="submit">Nộp bài</button>
+</section>
+<section class="card hidden" id="result">
+ <div style="text-align:center"><div style="font-size:42px">🏆</div><h2>KẾT QUẢ BÀI THI</h2><div style="font-size:42px;font-weight:850" id="finalScore">0/0</div><div class="muted" id="resultMsg"></div></div>
+ <div class="stats" style="margin-top:16px"><div class="stat"><b id="right">0</b><span class="muted">Câu đúng</span></div><div class="stat"><b id="wrong">0</b><span class="muted">Câu sai</span></div></div>
+ <button class="primary full" style="margin-top:16px" id="retake">🔄 LÀM BÀI THI LẠI</button><button class="secondary full" style="margin-top:9px" id="review">📖 Xem lại lời giải</button>
+</section>
+<section class="card"><b>📈 Tiến độ</b><div class="bar" style="margin-top:12px"><div id="studyBar"></div></div><p class="muted" id="studyText">Bắt đầu làm bài để theo dõi tiến độ.</p></section>
+<p class="muted" style="text-align:center;font-size:12px">EXAM.8 • Nội dung bám theo tài liệu bạn cung cấp.</p>
+</main>
+<script>
+const banks={
+"Sinh học":[
+["MC","Chất nào dưới đây bị biến đổi thành chất khác qua quá trình tiêu hóa?",["Vitamin","Ion khoáng","Tinh bột chín","Nước"],2,"Tinh bột chín được biến đổi thành chất khác qua quá trình tiêu hóa."],
+["MC","Trong cơ thể người có khoảng bao nhiêu cơ?",["400","500","600","700"],2,"Theo đề cương: khoảng 600 cơ."],
+["MC","Bệnh nào sau đây không liên quan đến hệ vận động?",["Còi xương","Loãng xương","Thấp khớp","Viêm phổi"],3,"Viêm phổi không thuộc hệ vận động."],
+["MC","Thành phần nào trong nước bọt tiêu hóa tinh bột chín thành maltose?",["Pepsin","Lipase","Trypsin","Amylase"],3,"Amylase thực hiện chức năng được hỏi."],
+["MC","Máu bao gồm:",["Hồng cầu và tiểu cầu","Huyết tương và các tế bào máu","Bạch cầu và hồng cầu","Hồng cầu, bạch cầu và tiểu cầu"],1,"Máu gồm huyết tương và các tế bào máu."],
+["MC","Kháng nguyên là:",["Protein do hồng cầu tiết ra","Protein do bạch cầu tiết ra","Protein do tiểu cầu tiết ra","Phân tử ngoại lai có khả năng kích thích cơ thể tạo kháng thể"],3,"Chọn định nghĩa trong đề cương."],
+["MC","Ở dạ dày, chất dinh dưỡng nào được biến đổi về mặt hóa học?",["Carbohydrate","Lipid","Protein","Vitamin"],2,"Đáp án trong đề cương là protein."],
+["MC","Tuyến tiêu hóa nào nằm trong đường ống tiêu hóa?",["Tuyến tụy","Tuyến vị","Gan","Tuyến nước bọt"],1,"Tuyến vị nằm trong đường ống tiêu hóa."],
+["MC","Cơ quan hấp thụ phần lớn chất dinh dưỡng?",["Ruột già","Ruột non","Dạ dày","Thực quản"],1,"Ruột non là nơi hấp thụ phần lớn chất dinh dưỡng."],
+["MC","Vòng tuần hoàn nhỏ đi qua cơ quan nào?",["Dạ dày","Gan","Phổi","Não"],2,"Vòng tuần hoàn nhỏ đi qua phổi."],
+["MC","Thành phần máu vận chuyển oxygen và carbon dioxide?",["Hồng cầu","Bạch cầu","Huyết tương","Tiểu cầu"],0,"Hồng cầu vận chuyển các khí."],
+["MC","Thứ tự vận tốc máu chảy đúng theo đề cương?",["Tĩnh mạch > mao mạch > động mạch","Động mạch > mao mạch > tĩnh mạch","Tĩnh mạch > động mạch > mao mạch","Động mạch > tĩnh mạch > mao mạch"],3,"Đáp án theo câu 14 trong đề cương."],
+["MC","Đặc điểm nào không có ở hồng cầu người?",["Hình đĩa lõm hai mặt","Nhiều nhân, nhân nhỏ, không màu","Màu hồng, không nhân","Tham gia vận chuyển khí"],1,"Hồng cầu người không có nhiều nhân."],
+["TF","Hệ vận động tạo bộ khung, định hình cơ thể, bảo vệ nội quan và giúp cơ thể vận động.",["Đúng","Sai"],0,"Nội dung đúng theo đề cương."],
+["TF","Có thể phòng ngừa cong vẹo cột sống bằng tư thế ngồi và sinh hoạt hợp lý.",["Đúng","Sai"],0,"Nội dung đúng theo đề cương."],
+["TF","Hệ tuần hoàn gồm tim và hệ mạch.",["Đúng","Sai"],0,"Nội dung đúng theo đề cương."],
+["TF","Nhóm máu O là nhóm chuyên nhận.",["Đúng","Sai"],1,"Mệnh đề sai theo đề cương."],
+["TF","Cốt giao làm xương bền chắc, chất khoáng làm xương mềm dẻo.",["Đúng","Sai"],1,"Mệnh đề đảo ngược vai trò hai thành phần."],
+["TF","Hệ vận động gồm hệ cơ và bộ xương.",["Đúng","Sai"],0,"Nội dung đúng theo đề cương."]
+],
+"Công nghệ":[
+["MC","Bản vẽ kỹ thuật có những loại tỉ lệ nào?",["Thu nhỏ, nguyên bản, phóng to","Đứng, bằng, cạnh","Dài, rộng, cao","To, nhỏ, vừa"],0,"Ba loại tỉ lệ ghi trong vở: thu nhỏ, nguyên bản, phóng to."],
+["MC","Khi đọc bản vẽ nhà, cần xem những nội dung nào?",["Chỉ khung tên","Khung tên, hình biểu diễn, kích thước, các bộ phận","Chỉ kích thước","Chỉ hình biểu diễn"],1,"Các mục được ghi trong vở: khung tên, hình biểu diễn, kích thước, các bộ phận."],
+["MC","Bản vẽ lắp dùng trong công việc nào?",["Thiết kế, lắp ráp, kiểm tra và sử dụng sản phẩm","Chỉ trang trí sản phẩm","Chỉ ghi tên vật liệu","Chỉ đo chiều dài"],0,"Đây là công dụng được ghi trong vở."],
+["MC","Hình chiếu đứng được nhìn theo hướng nào?",["Từ trên xuống","Từ dưới lên","Từ trước tới","Từ trái sang"],2,"Ghi chép của bạn: nhìn từ trước tới."],
+["MC","Hình chiếu của hình nón có dạng hình gì?",["Hình tròn","Tam giác cân","Hình vuông","Hình chữ nhật"],1,"Theo ghi chép trong vở: hình chiếu của hình nón có dạng tam giác cân."],
+["MC","Hình chiếu bằng nằm ở vị trí nào so với hình chiếu đứng?",["Phía trên","Phía dưới","Bên trái","Bên phải"],1,"Theo ghi chép: hình chiếu bằng nằm dưới hình chiếu đứng."],
+["MC","Bản vẽ lắp và bản vẽ chi tiết có những nội dung giống nhau nào theo ghi chép?",["Hình biểu diễn, kích thước, khung tên","Chỉ khung tên","Chỉ vật liệu","Chỉ hình biểu diễn"],0,"Ba nội dung ghi trong vở là hình biểu diễn, kích thước, khung tên."],
+["MC","Khi quay nửa hình tròn quanh đường kính, ta được hình gì?",["Hình cầu","Hình nón","Hình trụ","Hình hộp"],0,"Phần bạn bổ sung: nửa hình tròn quay quanh đường kính tạo hình cầu."],
+["MC","Khi quay tam giác vuông quanh một cạnh góc vuông, ta được hình gì?",["Hình cầu","Hình nón","Hình trụ","Hình lập phương"],1,"Phần bạn bổ sung: tam giác vuông quay quanh một cạnh góc vuông tạo hình nón."],
+["MC","Trong ghi chép, hình chiếu đứng được xác định bằng cách nhìn:",["Từ trước tới","Từ trên xuống","Từ dưới lên","Từ sau ra trước"],0,"Đáp án theo dòng ghi chú câu 10. Câu hỏi gốc trong vở chưa rõ hoàn toàn."]
+]
+};
+let subject="Sinh học",idx=0,answers={},submitted=false,reviewing=false,attempts={"Sinh học":0,"Công nghệ":0},last={"Sinh học":null,"Công nghệ":null},seconds=1800,timerInterval=null;
+const $=id=>document.getElementById(id);
+function bank(){return banks[subject]}
+function progress(){let n=Object.keys(answers).length,p=Math.round(n/bank().length*100);$("answeredStat").textContent=n;$("progressLabel").textContent=`Tiến độ: ${n}/${bank().length}`;$("progressPct").textContent=p+"%";$("progress").style.width=p+"%";$("studyBar").style.width=p+"%";$("studyText").textContent=`Đã trả lời ${n}/${bank().length} câu.`;$("attemptStat").textContent=attempts[subject];$("scoreStat").textContent=last[subject]===null?"—":last[subject]+"/"+bank().length}
+function render(){let q=bank()[idx];$("examHeading").textContent=(subject==="Sinh học"?"🧬 ":"⚙️ ")+subject+" 8";$("qType").textContent=q[0]==="MC"?"Trắc nghiệm":"Đúng / Sai";$("question").textContent=q[1];$("options").innerHTML="";q[2].forEach((v,j)=>{let b=document.createElement("button");b.className="option";b.textContent=(q[0]==="MC"?String.fromCharCode(65+j)+". ":"")+v;if(answers[idx]===j)b.classList.add("selected");if(submitted&&j===q[3])b.classList.add("correct");if(submitted&&answers[idx]===j&&j!==q[3])b.classList.add("wrong");b.disabled=submitted;b.onclick=()=>{answers[idx]=j;render()};$("options").append(b)});$("feedback").classList.toggle("hidden",!submitted&&!reviewing);if(submitted||reviewing){$("feedback").innerHTML=`<b>${answers[idx]===q[3]?"✓ Chính xác!":"✗ Chưa chính xác"}</b><p>${q[4]}</p><b>Đáp án: ${q[2][q[3]]}</b>`}$("prev").disabled=idx===0;$("next").textContent=idx===bank().length-1?"Câu đầu ↺":"Tiếp →";$("submit").disabled=submitted;progress()}
+function resetExam(){answers={};idx=0;submitted=false;reviewing=false;$("result").classList.add("hidden");$("feedback").classList.add("hidden");$("submit").disabled=false;stopTimer();seconds=Number($("duration").value)*60;showTime();$("timerStatus").textContent="Đã đặt lại cho lượt mới";$("timerStart").textContent="▶ Bắt đầu";render();$("examCard").scrollIntoView({behavior:"smooth"})}
+$("prev").onclick=()=>{if(idx>0){idx--;render()}};$("next").onclick=()=>{idx=idx===bank().length-1?0:idx+1;render()};
+$("submit").onclick=()=>{let missing=bank().length-Object.keys(answers).length;if(missing&&!confirm(`Còn ${missing} câu chưa trả lời. Vẫn nộp bài?`))return;submitted=true;attempts[subject]++;let score=bank().filter((q,i)=>answers[i]===q[3]).length;last[subject]=score;$("finalScore").textContent=score+"/"+bank().length;$("right").textContent=score;$("wrong").textContent=bank().length-score;$("resultMsg").textContent=score===bank().length?"Xuất sắc!":score>=bank().length*.7?"Rất tốt! Hãy xem lại câu sai.":"Đừng nản, xem lời giải rồi thi lại nhé!";$("result").classList.remove("hidden");stopTimer();$("timerStatus").textContent="Đã nộp bài";render();$("result").scrollIntoView({behavior:"smooth"})};
+$("retake").onclick=resetExam;$("review").onclick=()=>{reviewing=true;idx=0;render();$("examCard").scrollIntoView({behavior:"smooth"})};
+document.querySelectorAll(".subject").forEach(b=>b.onclick=()=>{subject=b.dataset.sub;document.querySelectorAll(".subject").forEach(x=>x.classList.toggle("active",x===b));resetExam();});
+function showTime(){$("timer").textContent=String(Math.floor(seconds/60)).padStart(2,"0")+":"+String(seconds%60).padStart(2,"0")}
+function stopTimer(){if(timerInterval)clearInterval(timerInterval);timerInterval=null}
+$("timerStart").onclick=()=>{if(timerInterval){stopTimer();$("timerStart").textContent="▶ Tiếp tục";$("timerStatus").textContent="Đã tạm dừng";return}if(seconds<=0)seconds=Number($("duration").value)*60;$("timerStart").textContent="Ⅱ Tạm dừng";$("timerStatus").textContent="Đang chạy";timerInterval=setInterval(()=>{seconds--;showTime();if(seconds<=0){stopTimer();$("timerStatus").textContent="Hết giờ";$("timerStart").textContent="▶ Tiếp tục";alert("Đã hết thời gian!")}},1000)};
+$("timerReset").onclick=()=>{stopTimer();seconds=Number($("duration").value)*60;showTime();$("timerStart").textContent="▶ Bắt đầu";$("timerStatus").textContent="Chưa bắt đầu"};
+$("duration").onchange=()=>{if(!timerInterval){seconds=Number($("duration").value)*60;showTime()}};
+render();showTime();
+</script></body></html>
