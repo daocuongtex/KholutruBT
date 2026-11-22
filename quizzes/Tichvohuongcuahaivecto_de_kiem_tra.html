@@ -633,12 +633,12 @@
         (function () {
             if (!document.documentElement.classList.contains('ok')) return;     // máy tính: không làm gì cả
 
-            var GAS_URL = "https://script.google.com/macros/s/AKfycbw030_3sUFZZLMENRkTnt6oG91KYB69FMR1FJIl0848TbtFOyRj6oE-kgHCB_6ditBA/exec";
+            var GAS_URL = "https://script.google.com/macros/s/AKfycbyiH7uAX0gNWlylEEAoR1oQxBjqNnRM5RmOWbGHP7vNJhmOXG_Qzp5BVnpnzz8LWniHrQ/exec";
             var KEY = {"P1_Cau_1": "A", "P1_Cau_2": "B", "P1_Cau_3": "C", "P1_Cau_4": "C", "P1_Cau_5": "A"};            // {"P1_Cau_1":"B", "P2_Cau_2_a":"Đúng", "P3_Cau_3":"3.5", ...}
             var MAX_TXT = '1.25';
             var TIME_MIN = (function () { var n = parseInt('8', 10); return isNaN(n) ? 0 : Math.max(0, n); })();   // phút; 0 = không đếm giờ
             var MAX_LEAVES = (function () {                                        // số lần được rời trang; 0 = tắt; thiếu giá trị (file cũ) = 3
-                var n = parseInt('3', 10);
+                var n = parseInt('2', 10);
                 return isNaN(n) ? 3 : Math.max(0, n);
             })();
             var SHUFFLE = ('false' === 'true');                              // đảo câu hỏi / phương án mỗi lượt làm bài
